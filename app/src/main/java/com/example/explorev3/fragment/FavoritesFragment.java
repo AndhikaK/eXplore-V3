@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +41,18 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
         mAdapter = new FavoriteAdapter(getContext(), getAllItems());
         recyclerView.setAdapter(mAdapter);
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                removeFavorite((long) viewHolder.itemView.getTag());
+            }
+        }).attachToRecyclerView(recyclerView);
+
         btnRefresh = view.findViewById(R.id.favorite_refresh);
         btnRefresh.setOnClickListener(this);
 
@@ -65,5 +78,12 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
                 mAdapter.swapCursor(getAllItems());
                 break;
         }
+    }
+
+    private void removeFavorite(long id) {
+        mDatabase.delete(FavoriteContract.FavoriteEntry.TABLE_NAME,
+                FavoriteContract.FavoriteEntry._ID + "=" + id, null);
+
+        mAdapter.swapCursor(getAllItems());
     }
 }

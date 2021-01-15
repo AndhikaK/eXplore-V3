@@ -37,7 +37,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
         String name = mCursor.getString(mCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLLUMN_NAME));
         String rating = mCursor.getString(mCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLLUMN_RATING));
+        long id = mCursor.getLong(mCursor.getColumnIndex(FavoriteContract.FavoriteEntry._ID));
 
+
+        holder.itemView.setTag(id);
         holder.favoriteName.setText(name);
         holder.favoriteRating.setText(rating);
     }

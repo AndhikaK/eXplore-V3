@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -114,7 +115,7 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
         }
 
         if (mDots.length > 0) {
-            String[] screenTitle = {"Home", "eXplore", "My Favorites", "Share Hall"};
+            String[] screenTitle = {"Home", "eXplore", "My Favorites", "Community's Post"};
             mDots[position].setTextColor(dotSolid);
 //            mActionBar.setBackgroundColor(backgroundBanner);
             fragmentTitle.setText(screenTitle[position]);
@@ -157,7 +158,10 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_avatar:
-
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra("USER_NAME", userName);
+                intent.putExtra("USER_EMAIL", userEmail);
+                startActivity(intent);
                 break;
         }
     }
@@ -192,8 +196,8 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
             int randNum = rand.nextInt(1000);
 
             userUID = "Guest" + randNum;
-            userName = "";
-            userEmail = "";
+            userName = "Guest";
+            userEmail = "Guest@xplore.com";
         }
     }
 }

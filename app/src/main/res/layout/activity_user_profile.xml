@@ -6,6 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".UserProfileActivity">
 
+    <RelativeLayout
+        android:id="@+id/action_bar_profile"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:background="@color/background_blue">
+
+        <RelativeLayout
+            android:id="@+id/action_bar_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            >
+
+            <TextView
+                android:id="@+id/fragment_title_banner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:text="Profile"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/user_avatar_profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/userpout"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/black"
+        android:layout_below="@id/action_bar_profile"
+        android:layout_marginTop="-50dp"
+        />
+
     <TextView
         android:id="@+id/user_email_profile"
         android:layout_width="wrap_content"
@@ -13,6 +56,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
+        android:layout_below="@id/user_avatar_profile"
         />
 
     <TextView
