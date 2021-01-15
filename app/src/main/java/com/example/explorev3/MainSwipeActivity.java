@@ -1,5 +1,6 @@
 package com.example.explorev3;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
@@ -7,9 +8,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.explorev3.adapter.SlidePagerAdapter;
 import com.example.explorev3.fragment.FavoritesFragment;
@@ -17,36 +20,56 @@ import com.example.explorev3.fragment.HomeFragment;
 import com.example.explorev3.fragment.PostFragment;
 import com.example.explorev3.fragment.SearchFragment;
 import com.example.explorev3.pojo.FilterData;
+import com.example.explorev3.pojo.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class MainSwipeActivity extends AppCompatActivity implements FilterSearchDialog.FilterDialogListener {
+public class MainSwipeActivity extends AppCompatActivity implements FilterSearchDialog.FilterDialogListener, View.OnClickListener {
 
     private ViewPager viewPager;
     private LinearLayout mDotLayout;
     private RelativeLayout mActionBar;
     private TextView[] mDots;
     private TextView fragmentTitle;
-
+    private CircularImageView userAvatar;
     private PagerAdapter pagerAdapter;
 
     private FilterData filterData;
+
+    String userName, userEmail;
+
+    private FirebaseAuth firebaseAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser user;
+    private DatabaseReference reference;
+    private String userUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_swipe);
 
+        userAvatar = findViewById(R.id.user_avatar);
         fragmentTitle = findViewById(R.id.fragment_title_banner);
         mActionBar = findViewById(R.id.action_bar);
+
+        userAvatar.setOnClickListener(this);
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new HomeFragment());
         fragmentList.add(new SearchFragment());
         fragmentList.add(new FavoritesFragment());
         fragmentList.add(new PostFragment());
-
 
         // Swipe fragment using view pager
         mDotLayout = findViewById(R.id.dots_indicator);
@@ -57,6 +80,9 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
 
         addDotIndicator(0);
         viewPager.addOnPageChangeListener(viewPagerListener);
+
+        // get user data from firebase
+        getUserData();
     }
 
     public void addDotIndicator(int position) {
@@ -127,4 +153,47 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
         return filterData;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.user_avatar:
+
+                break;
+        }
+    }
+
+    private void getUserData() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            userUID = user.getUid();
+
+            // get user data from firebase realtime database
+            reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User userProfile = snapshot.getValue(User.class);
+
+                    if (userProfile != null) {
+                        userName = userProfile.name;
+                        userEmail = userProfile.email;
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(MainSwipeActivity.this, "Something wrong happened!", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            // No user is signed in
+            Random rand = new Random();
+            int randNum = rand.nextInt(1000);
+
+            userUID = "Guest" + randNum;
+            userName = "";
+            userEmail = "";
+        }
+    }
 }
