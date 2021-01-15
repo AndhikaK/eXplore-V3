@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="input_size" type="dimen">260dp</item>
+    <item name="input_txt_size" type="dimen">12dp</item>
+</resources>

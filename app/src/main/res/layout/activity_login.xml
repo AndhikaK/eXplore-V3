@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <ProgressBar
+        android:id="@+id/progress_bar_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+    <RelativeLayout
+        android:id="@+id/logo_container"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@color/blue_cc">
+
+        <ImageView
+            android:id="@+id/app_logo"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@drawable/explore_logo_white"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sniglet"
+            android:textSize="40dp"
+            android:text="eXplore"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_below="@id/app_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-20dp"/>
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/edt_email_login"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo_container"
+        android:hint="Email"
+        android:padding="15dp"
+        android:textSize="@dimen/input_txt_size"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="#0d000000"
+        android:text="deathscarlet21@gmail.com"
+        />
+
+    <EditText
+        android:id="@+id/edt_password_login"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_email_login"
+        android:hint="Password"
+        android:background="@color/black_0d"
+        android:padding="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textSize="@dimen/input_txt_size"
+        android:inputType="textPassword"
+        android:text="123456"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_signin_login"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Sign in"
+        android:layout_below="@id/edt_password_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:textSize="25sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textAllCaps="false"
+        app:cornerRadius="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_signup_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btn_signin_login"
+        android:text="Don't have account? Sign up!"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"/>
+
+
+</RelativeLayout>

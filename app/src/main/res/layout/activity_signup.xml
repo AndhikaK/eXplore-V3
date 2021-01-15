@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupActivity">
+
+    <ProgressBar
+        android:id="@+id/progress_bar_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        />
+
+    <RelativeLayout
+        android:id="@+id/logo_container"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@color/blue_cc">
+
+        <ImageView
+            android:id="@+id/app_logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/explore_logo_white"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sniglet"
+            android:textSize="40dp"
+            android:text="eXplore"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_below="@id/app_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-20dp"/>
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/edt_name_signup"
+        android:layout_width="@dimen/input_size"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo_container"
+        android:hint="Name"
+        android:padding="15dp"
+        android:textSize="@dimen/input_txt_size"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="#0d000000"
+        />
+
+    <EditText
+        android:id="@+id/edt_email_signup"
+        android:layout_width="@dimen/input_size"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt_name_signup"
+        android:hint="Email"
+        android:padding="15dp"
+        android:textSize="@dimen/input_txt_size"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="#0d000000"/>
+
+    <EditText
+        android:id="@+id/edt_password_signup"
+        android:layout_width="@dimen/input_size"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_email_signup"
+        android:hint="Password"
+        android:background="@color/black_0d"
+        android:padding="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textSize="@dimen/input_txt_size"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/edt_password_confirm_signup"
+        android:layout_width="@dimen/input_size"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_password_signup"
+        android:hint="Password"
+        android:background="@color/black_0d"
+        android:padding="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textSize="@dimen/input_txt_size"
+        android:inputType="textPassword"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_signup"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:text="Sign up"
+        android:layout_below="@id/edt_password_confirm_signup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textAllCaps="false"
+        app:cornerRadius="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_signin_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btn_signup"
+        android:text="Already have an account? Sign in!"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"/>
+
+
+</RelativeLayout>

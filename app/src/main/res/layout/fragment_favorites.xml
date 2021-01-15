@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background_grey"
+    android:paddingTop="100dp">
+
+
+    <Button
+        android:id="@+id/favorite_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Refresh"
+        android:drawableLeft="@drawable/ic_baseline_refresh_24"
+        android:background="@drawable/corner_radius"
+        android:textSize="10sp"
+        android:layout_marginLeft="20dp"
+        android:textAllCaps="false"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favorites_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/corner_radius"
+        tools:layout_editor_absoluteX="61dp"
+        tools:layout_editor_absoluteY="347dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:elevation="1dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@id/favorite_refresh"
+        />
+
+
+</RelativeLayout>
