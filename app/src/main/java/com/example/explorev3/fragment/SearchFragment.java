@@ -1,6 +1,9 @@
 package com.example.explorev3.fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,15 +35,20 @@ import com.example.explorev3.PlaceDetailActivity;
 import com.example.explorev3.pojo.FilterData;
 import com.example.explorev3.pojo.PlaceItem;
 import com.example.explorev3.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClickListener, View.OnClickListener{
 
     public static final String EXTRA_XID = "xid";
+    private static final int REQUEST_LOCATION_PERMISSION = 0;
 
     String JSON_URL = "";
 
@@ -52,13 +61,22 @@ public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClick
     private ArrayList<PlaceItem> mPlaceList;
     private RequestQueue mRequestQueue;
 
-    private String filterLatt, filterLon, filterRadius, filterName;
+    private Location mLastLocation;
+    private FusedLocationProviderClient mFusedLocationClient;
+
+    private String deviceLat, deviceLon;
+
+    private String filterRadius, filterName;
     private ArrayList<String> checkResult;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        // getting device current location
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        getLocation();
 
         searchView = view.findViewById(R.id.search_view);
         filterSearch = view.findViewById(R.id.search_filter);
@@ -84,6 +102,8 @@ public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClick
         mRecyclerView.setAdapter(mPlaceAdapter);
         mPlaceAdapter.setOnItemClickListener(SearchFragment.this);
 
+
+
         return view;
     }
 
@@ -96,6 +116,47 @@ public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClick
 
             case R.id.search_filter:
                 filterSearchDialog();
+                break;
+        }
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[] {
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            }, REQUEST_LOCATION_PERMISSION);
+        } else {
+            Log.d("GetLocation", "getLocation: permissions granted");
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        mLastLocation = location;
+                        deviceLat = Double.toString(mLastLocation.getLatitude());
+                        deviceLon = Double.toString(mLastLocation.getLongitude());
+
+                        Toast.makeText(getContext(), "Lat" + deviceLat + " Lon" + deviceLon, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "Failed to retrieve location", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+                // If the permission is granted, get the location,
+                // otherwise, show a Toast
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else {
+                    Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -122,22 +183,22 @@ public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClick
         String jsonURL = null;
         try {
             MainSwipeActivity activity = (MainSwipeActivity) getActivity();
-            FilterData data = activity.getData();
+            FilterData filter = activity.getData();
 
-            Log.d("bruhh", "checkSomething: " + data);
-            Log.d("bruhh", "checkAll: " + data.getRadius());
-            Log.d("bruhh", "checkAll: " + data.getLatt());
-            Log.d("bruhh", "checkAll: " + data.getLon());
-            Log.d("bruhh", "checkAll: " + data.getCheckResult());
+            Log.d("bruhh", "checkSomething: " + filter);
+            Log.d("bruhh", "checkAll: " + filter.getRadius());
+            Log.d("bruhh", "checkAll: " + filter.getLatt());
+            Log.d("bruhh", "checkAll: " + filter.getLon());
+            Log.d("bruhh", "checkAll: " + filter.getCheckResult());
 
             String checkKinds, name, lon, latt, radius;
 
-            if (data.getCheckResult() == null || data.getCheckResult().size() < 1) {
+            if (filter.getCheckResult() == null || filter.getCheckResult().size() < 1) {
                 checkKinds = "";
             } else {
                 StringBuffer result = new StringBuffer();
 
-                for (String kind : data.getCheckResult()) {
+                for (String kind : filter.getCheckResult()) {
                     result.append(kind);
                     result.append("%2C");
                 }
@@ -153,25 +214,23 @@ public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClick
                 name = "&name=" + searchView.getText().toString().trim();
             }
 
-            if (data.getLatt() == null || data.getLatt() == "" || data.getLatt().isEmpty()) {
-                filterLatt = "-4.281609";
-                latt = "&lat=" + filterLatt;
+            if (filter.getLatt() == null || filter.getLatt() == "" || filter.getLatt().isEmpty()) {
+                latt = "&lat=" + deviceLat;
             } else {
-                latt = "&lat=" + data.getLatt();
+                latt = "&lat=" + filter.getLatt();
             }
 
-            if (data.getLon() == null || data.getLon() == "" || data.getLon().isEmpty()) {
-                filterLon = "104.319946";
-                lon = "&lon=" + filterLon;
+            if (filter.getLon() == null || filter.getLon() == "" || filter.getLon().isEmpty()) {
+                lon = "&lon=" + deviceLon;
             } else {
-                lon = "&lon=" + data.getLon();
+                lon = "&lon=" + filter.getLon();
             }
 
-            if (data.getRadius() == null || data.getRadius().isEmpty() ) {
+            if (filter.getRadius() == null || filter.getRadius().isEmpty() ) {
                 filterRadius = Integer.toString(100 * 1000);
                 radius = "radius=" + filterRadius;
             } else {
-                radius = "radius=" + data.getRadius() + "000";
+                radius = "radius=" + filter.getRadius() + "000";
             }
 
             jsonURL = "https://api.opentripmap.com/0.1/en/places/radius?" +

@@ -72,7 +72,7 @@ public class PlaceDetailActivity extends AppCompatActivity implements View.OnCli
         mPlaceRating = intent.getStringExtra("EXTRA_RATING");
 
         btnFavorite = findViewById(R.id.favorites_btn);
-        imageLoading = findViewById(R.id.image_loading);
+//        imageLoading = findViewById(R.id.image_loading);
         mStarLayout = findViewById(R.id.detail_rating);
         requestQueue = Volley.newRequestQueue(this);
         detailName = findViewById(R.id.detailName);
@@ -127,15 +127,16 @@ public class PlaceDetailActivity extends AppCompatActivity implements View.OnCli
                     detailAddress.setText(dataAddress);
                     detailPlace.setText(dataPlace);
 
-                    imageLoading.setVisibility(View.INVISIBLE);
+//                    imageLoading.setVisibility(View.INVISIBLE);
 
                     Picasso.get().load(dataImage).into(detailImage);
+                    detailImage.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
 //                    Toast.makeText(PlaceDetailActivity.this, "Something when wrong!", Toast.LENGTH_SHORT).show();
                     detailAddress.setText("Position\n  Lat : " + mPlaceLat + "\n  Lon : " + mPlaceLon);
                     detailPlace.setText("This place doesn't has any detail");
 
-                    imageLoading.setVisibility(View.INVISIBLE);
+//                    imageLoading.setVisibility(View.INVISIBLE);
                     detailImage.setVisibility(View.VISIBLE);
                     e.printStackTrace();
                 }

@@ -23,6 +23,7 @@
                 android:adjustViewBounds="true"
                 android:id="@+id/detailImage"
                 android:src="@drawable/no_image_icon"
+                android:scaleType="centerCrop"
                 android:visibility="invisible"
                 />
 
@@ -55,30 +56,30 @@
             </RelativeLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:id="@+id/image_loading"
-                android:visibility="visible">
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="220dp"-->
+<!--                android:id="@+id/image_loading"-->
+<!--                android:visibility="gone">-->
 
-                <ImageView
-                    android:id="@+id/hourglass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="220dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_baseline_hourglass_bottom_24" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/hourglass"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="220dp"-->
+<!--                    android:layout_centerInParent="true"-->
+<!--                    android:src="@drawable/ic_baseline_hourglass_bottom_24" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loading..."
-                    android:layout_below="@id/hourglass"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-70dp"
-                    />
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Loading..."-->
+<!--                    android:layout_below="@id/hourglass"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_marginTop="-70dp"-->
+<!--                    />-->
 
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
             <!--            <TextView-->
             <!--                android:layout_width="wrap_content"-->
