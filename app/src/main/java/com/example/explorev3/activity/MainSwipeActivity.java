@@ -1,4 +1,4 @@
-package com.example.explorev3;
+package com.example.explorev3.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,13 +8,17 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.explorev3.FilterSearchDialog;
+import com.example.explorev3.R;
 import com.example.explorev3.adapter.SlidePagerAdapter;
 import com.example.explorev3.fragment.FavoritesFragment;
 import com.example.explorev3.fragment.HomeFragment;
@@ -30,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +47,12 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
     private RelativeLayout mActionBar;
     private TextView[] mDots;
     private TextView fragmentTitle;
-    private CircularImageView userAvatar;
+    private CircularImageView imgUserAvatar;
     private PagerAdapter pagerAdapter;
 
     private FilterData filterData;
 
-    String userName, userEmail;
+    String userName, userEmail, userAvatar;
 
     private FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
@@ -60,11 +65,11 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_swipe);
 
-        userAvatar = findViewById(R.id.user_avatar);
+        imgUserAvatar = findViewById(R.id.user_avatar);
         fragmentTitle = findViewById(R.id.fragment_title_banner);
         mActionBar = findViewById(R.id.action_bar);
 
-        userAvatar.setOnClickListener(this);
+        imgUserAvatar.setOnClickListener(this);
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new HomeFragment());
@@ -83,6 +88,13 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
         viewPager.addOnPageChangeListener(viewPagerListener);
 
         // get user data from firebase
+        getUserData();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
         getUserData();
     }
 
@@ -161,6 +173,7 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
                 Intent intent = new Intent(this, UserProfileActivity.class);
                 intent.putExtra("USER_NAME", userName);
                 intent.putExtra("USER_EMAIL", userEmail);
+                intent.putExtra("USER_AVATAR", userAvatar);
                 startActivity(intent);
                 break;
         }
@@ -174,7 +187,7 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
 
             // get user data from firebase realtime database
             reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child(userUID).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User userProfile = snapshot.getValue(User.class);
@@ -182,12 +195,13 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
                     if (userProfile != null) {
                         userName = userProfile.name;
                         userEmail = userProfile.email;
+                        userAvatar = userProfile.avatar;
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(MainSwipeActivity.this, "Something wrong happened!", Toast.LENGTH_LONG).show();
+
                 }
             });
         } else {
@@ -199,5 +213,18 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
             userName = "Guest";
             userEmail = "Guest@xplore.com";
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Picasso.get()
+                        .load(userAvatar)
+                        .placeholder(R.drawable.progress_animation)
+                        .into(imgUserAvatar);
+//                Picasso.get().load(userAvatar).into(imgUserAvatar);
+                Log.d("getuserdata", "getUserData: avatar url " + userAvatar + ", name" + userName);
+            }
+        }, 5000);
+
     }
 }

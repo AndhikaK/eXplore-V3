@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserProfileActivity">
+    tools:context=".activity.UserProfileActivity">
 
     <RelativeLayout
         android:id="@+id/action_bar_profile"
@@ -47,16 +47,7 @@
         app:civ_border_color="@color/black"
         android:layout_below="@id/action_bar_profile"
         android:layout_marginTop="-50dp"
-        />
-
-    <TextView
-        android:id="@+id/user_email_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        android:layout_below="@id/user_avatar_profile"
+        android:scaleType="centerCrop"
         />
 
     <TextView
@@ -64,12 +55,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/user_email_profile"
-        android:layout_marginTop="20dp"
+        android:text="user_name"
+        android:layout_below="@id/user_avatar_profile"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        />
+
+    <ImageView
+        android:id="@+id/edit_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_create_24"
+        android:layout_toEndOf="@id/user_name_profile"
+        android:layout_alignTop="@id/user_name_profile"
+        android:layout_alignBottom="@id/user_name_profile"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         />
 
     <Button
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

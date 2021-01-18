@@ -1,4 +1,4 @@
-package com.example.explorev3;
+package com.example.explorev3.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +24,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.explorev3.FavoriteContract;
+import com.example.explorev3.FavoriteDBHelper;
+import com.example.explorev3.R;
 import com.example.explorev3.fragment.FavoritesFragment;
 import com.google.android.gms.maps.MapView;
 import com.squareup.picasso.Picasso;

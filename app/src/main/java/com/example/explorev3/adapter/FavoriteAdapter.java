@@ -1,4 +1,4 @@
-package com.example.explorev3;
+package com.example.explorev3.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.explorev3.FavoriteContract;
+import com.example.explorev3.R;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
 

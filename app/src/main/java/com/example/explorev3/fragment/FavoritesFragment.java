@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.explorev3.FavoriteAdapter;
+import com.example.explorev3.adapter.FavoriteAdapter;
 import com.example.explorev3.FavoriteContract;
 import com.example.explorev3.FavoriteDBHelper;
 import com.example.explorev3.R;

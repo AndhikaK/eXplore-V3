@@ -1,4 +1,4 @@
-package com.example.explorev3;
+package com.example.explorev3.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.explorev3.R;
 import com.example.explorev3.fragment.FavoritesFragment;
 import com.example.explorev3.fragment.HomeFragment;
 import com.example.explorev3.fragment.PostFragment;
@@ -25,21 +27,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
+import java.io.PipedReader;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView nameTv;
 
-    String userName, userEmail;
+    String userName, userEmail, userAvatar;
 
     private FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser user;
     private DatabaseReference reference;
 
-    CircularImageView userPout;
+    CircularImageView imgUserAvatar;
 
     private String userUID;
 
@@ -50,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         nameTv = findViewById(R.id.test);
 
-        userPout = findViewById(R.id.userPout);
-        userPout.setOnClickListener(this);
+        imgUserAvatar = findViewById(R.id.userPout);
+        imgUserAvatar.setOnClickListener(this);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(bottomNavListener);
@@ -59,6 +63,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
         // Get user data
+        getUserData();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
         getUserData();
     }
 
@@ -78,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (userProfile != null) {
                         userName = userProfile.name;
                         userEmail = userProfile.email;
+                        userAvatar = userProfile.avatar;
                     }
                 }
 
@@ -97,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         nameTv.setText(userUID);
+        Picasso.get().load(userAvatar).into(imgUserAvatar);
+        Log.d("get user data", "getUserData: image url " + imgUserAvatar);
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener bottomNavListener =

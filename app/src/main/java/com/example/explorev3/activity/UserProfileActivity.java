@@ -1,22 +1,24 @@
-package com.example.explorev3;
+package com.example.explorev3.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.explorev3.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    String userName, userEmail;
+    private String userName, userEmail;
 
-    TextView tvUserName, tvUserEmail;
+    private TextView tvUserName;
+    private ImageView editProfile, profile;
     private Button btnLogout;
 
     @Override
@@ -29,22 +31,30 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         userEmail = intent.getStringExtra("USER_EMAIL");
 
         tvUserName = findViewById(R.id.user_name_profile);
-        tvUserEmail = findViewById(R.id.user_email_profile);
-
-        Log.d("Nah", "onCreate: userName = " + userName);
+        editProfile = findViewById(R.id.edit_profile);
+        btnLogout = (Button) findViewById(R.id.btn_logout);
+        profile = findViewById(R.id.user_avatar_profile);
+        Picasso.get().load(intent.getStringExtra("USER_AVATAR")).into(profile);
 
         tvUserName.setText(userName);
-        tvUserEmail.setText(userEmail);
 
-        btnLogout = (Button) findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(this);
+        editProfile.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
-        switch (R.id.btn_logout) {
+        switch (v.getId()) {
             case R.id.btn_logout:
                 userLogout();
+                break;
+            case R.id.edit_profile:
+                Intent intent = new Intent(this, EditProfileActivity.class);
+                intent.putExtra("USER_NAME", userName);
+                intent.putExtra("USER_EMAIL", userEmail);
+
+                startActivity(intent);
                 break;
         }
     }

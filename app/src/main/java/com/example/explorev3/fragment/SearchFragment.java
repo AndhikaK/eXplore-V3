@@ -12,11 +12,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
-import android.widget.Switch;
 import android.widget.Toast;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -29,9 +26,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.explorev3.FilterSearchDialog;
-import com.example.explorev3.MainSwipeActivity;
+import com.example.explorev3.activity.MainSwipeActivity;
 import com.example.explorev3.adapter.PlaceAdapter;
-import com.example.explorev3.PlaceDetailActivity;
+import com.example.explorev3.activity.PlaceDetailActivity;
 import com.example.explorev3.pojo.FilterData;
 import com.example.explorev3.pojo.PlaceItem;
 import com.example.explorev3.R;
@@ -102,8 +99,6 @@ public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClick
         mRecyclerView.setAdapter(mPlaceAdapter);
         mPlaceAdapter.setOnItemClickListener(SearchFragment.this);
 
-
-
         return view;
     }
 
@@ -135,7 +130,6 @@ public class SearchFragment extends Fragment implements PlaceAdapter.OnItemClick
                         deviceLat = Double.toString(mLastLocation.getLatitude());
                         deviceLon = Double.toString(mLastLocation.getLongitude());
 
-                        Toast.makeText(getContext(), "Lat" + deviceLat + " Lon" + deviceLon, Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Failed to retrieve location", Toast.LENGTH_LONG).show();
                     }
