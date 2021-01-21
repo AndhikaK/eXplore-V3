@@ -41,6 +41,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.tvName.setText(postCurrent.getName());
         holder.tvAddress.setText(postCurrent.getAddress());
         holder.tvDesc.setText(postCurrent.getDesc());
+        holder.tvPoster.setText("Posted by " + postCurrent.getUid());
 
         Picasso.get()
                 .load(postCurrent.getImgUrl())
@@ -54,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
         public ImageView imgPost;
-        public TextView tvName, tvAddress, tvDesc;
+        public TextView tvName, tvAddress, tvDesc, tvPoster;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,7 +64,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             tvName = itemView.findViewById(R.id.tv_post_name);
             tvAddress = itemView.findViewById(R.id.tv_post_address);
             tvDesc = itemView.findViewById(R.id.tv_post_desc);
-
+            tvPoster = itemView.findViewById(R.id.tv_post_poster);
 
         }
     }

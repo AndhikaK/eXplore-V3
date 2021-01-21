@@ -20,12 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.explorev3.pojo.PostItem;
+import com.example.explorev3.pojo.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -52,6 +56,9 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
     private DatabaseReference mDatabaseRef;
     private StorageTask uploadPostTask;
     private Uri mImageUri;
+
+    private String userUID, userName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +79,26 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         btnUploadPost.setOnClickListener(this);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        userUID = user.getUid();
+
+        // get user data from firebase realtime database
+        FirebaseDatabase.getInstance().getReference("Users")
+            .child(userUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+
+                if (userProfile != null) {
+                    userName = userProfile.name;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -163,7 +190,7 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
                                     Toast.makeText(AddPostActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
 
                                     Map<String, Object> childUpload = new HashMap<>();
-                                    childUpload.put("uid", user.getUid());
+                                    childUpload.put("uid", userName);
                                     childUpload.put("name", name);
                                     childUpload.put("address", address);
                                     childUpload.put("desc", desc);
