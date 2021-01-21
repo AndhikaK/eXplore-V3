@@ -58,6 +58,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postItems.clear();
+
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     PostItem postItem = postSnapshot.getValue(PostItem.class);
                     postItems.add(postItem);

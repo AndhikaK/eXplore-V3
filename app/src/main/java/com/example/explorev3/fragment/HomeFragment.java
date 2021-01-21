@@ -19,21 +19,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private TextView tvHello;
 
+    String userName;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                MainSwipeActivity activity = (MainSwipeActivity) getActivity();
-                String userName = activity.getUserName();
+        tvHello = view.findViewById(R.id.welcome_tv);
 
-                tvHello = view.findViewById(R.id.welcome_tv);
-                tvHello.setText("Hello, " + userName);
-            }
-        }, 7000);
+        MainSwipeActivity activity = (MainSwipeActivity) getActivity();
+
+        new Handler().postDelayed((Runnable) () -> {
+            userName = activity.getUserName();
+            tvHello.setText("Hello, " + userName);
+        }, 5000);
 
         return view;
     }

@@ -72,15 +72,12 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             mTextPlaceName = itemView.findViewById(R.id.text_place_name);
             mTextPlaceRating = itemView.findViewById(R.id.text_place_rating);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        int position = getAdapterPosition();
+            itemView.setOnClickListener(v -> {
+                if (mListener != null) {
+                    int position = getAdapterPosition();
 
-                        if (position != RecyclerView.NO_POSITION) {
-                            mListener.onItemClick(position);
-                        }
+                    if (position != RecyclerView.NO_POSITION) {
+                        mListener.onItemClick(position);
                     }
                 }
             });
