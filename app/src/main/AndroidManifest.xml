@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EXploreV3">
-        <activity android:name=".activity.EditProfileActivity"></activity>
+        <activity android:name=".AddPostActivity"></activity>
+        <activity android:name=".activity.EditProfileActivity" />
         <activity android:name=".activity.MainSwipeActivity" />
         <activity android:name=".activity.UserProfileActivity" />
         <activity android:name=".activity.PlaceDetailActivity" />
@@ -27,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

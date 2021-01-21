@@ -21,4 +21,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="dot_transparent">#80FFFFFF</color>
     <color name="star">#FFD400</color>
+    <color name="background_blue_darker">#0e81d1</color>
 </resources>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.explorev3.R;
-import com.example.explorev3.activity.MainActivity;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -25,7 +24,7 @@ public class SplashScreen extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 finally {
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), MainSwipeActivity.class));
                 }
             }
         };

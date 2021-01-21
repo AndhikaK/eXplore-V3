@@ -170,7 +170,7 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_avatar:
-                Intent intent = new Intent(this, UserProfileActivity.class);
+                Intent intent = new Intent(this, EditProfileActivity.class);
                 intent.putExtra("USER_NAME", userName);
                 intent.putExtra("USER_EMAIL", userEmail);
                 intent.putExtra("USER_AVATAR", userAvatar);
@@ -178,6 +178,12 @@ public class MainSwipeActivity extends AppCompatActivity implements FilterSearch
                 break;
         }
     }
+
+    public String getUserUID() {
+        return userUID;
+    }
+
+    public String getUserName() {return userName;}
 
     private void getUserData() {
         user = FirebaseAuth.getInstance().getCurrentUser();

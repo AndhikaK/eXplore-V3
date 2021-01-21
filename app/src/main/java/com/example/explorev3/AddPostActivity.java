@@ -1,4 +1,4 @@
-package com.example.explorev3.activity;
+package com.example.explorev3;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -18,16 +16,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.explorev3.R;
-import com.example.explorev3.pojo.UpdateAvatar;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.explorev3.pojo.PostItem;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,101 +35,59 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.BlockingDeque;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddPostActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private EditText editUsername;
-    private EditText editUserEmail;
-    private Button btnUpdateProfile;
-    private ImageView imgEditAvatar;
+    private static final int PICK_IMAGE_REQUEST = 0;
+    //
+    private Button btnUploadPost, btnChooseImg;
+    private EditText postName, postAddress, postDesc;
+    private TextView tvImgName;
+    private ImageView imgContainer;
     private ProgressBar progressBar;
 
-    private Uri mImageUri;
-
+    private FirebaseUser user;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
-    private StorageTask uploadAvatarTask;
-
-    private String userName, userEmail, userAvatar;
-
+    private StorageTask uploadPostTask;
+    private Uri mImageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+        setContentView(R.layout.activity_add_post);
 
-        Intent intent = getIntent();
-        userName = intent.getStringExtra("USER_NAME");
-        userEmail = intent.getStringExtra("USER_EMAIL");
-        userAvatar = intent.getStringExtra("USER_AVATAR");
+        postName = findViewById(R.id.edt_name_post);
+        postAddress = findViewById(R.id.edt_address_post);
+        postDesc = findViewById(R.id.edt_desc_post);
+        btnUploadPost = findViewById(R.id.btn_upload_post);
+        btnChooseImg = findViewById(R.id.btn_choose_img_post);
+        imgContainer = findViewById(R.id.img_container_post);
+        progressBar = findViewById(R.id.upload_progress_bar_post);
 
-        editUsername = findViewById(R.id.edt_edit_name);
-        editUserEmail = findViewById(R.id.edt_edit_email);
-        btnUpdateProfile = findViewById(R.id.btn_update_profile);
-        imgEditAvatar = findViewById(R.id.img_edit_avatar);
-        progressBar = findViewById(R.id.upload_progres_bar);
+        mStorageRef = FirebaseStorage.getInstance().getReference("post");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("post");
 
-        Picasso.get().load(userAvatar).into(imgEditAvatar);
+        btnChooseImg.setOnClickListener(this);
+        btnUploadPost.setOnClickListener(this);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("avatar");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-
-        editUsername.setText(userName);
-        editUserEmail.setText(userEmail);
-
-        editUsername.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                btnUpdateProfile.setVisibility(View.VISIBLE);
-            }
-        });
-
-        imgEditAvatar.setOnClickListener(this);
-        btnUpdateProfile.setOnClickListener(this);
-
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_update_profile:
-                updateUserName();
-                break;
-            case R.id.img_edit_avatar:
+            case R.id.btn_choose_img_post:
                 openFileChooser();
                 break;
+            case R.id.btn_upload_post:
+                if (uploadPostTask != null && uploadPostTask.isInProgress())
+                    Toast.makeText(this, "Upload still in progress", Toast.LENGTH_SHORT).show();
+                else
+                    uploadFile();
+
+                break;
         }
-    }
-
-    private void updateUserName() {
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("name", editUsername.getText().toString().trim());
-
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .updateChildren(childUpdates)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(EditProfileActivity.this, "Name has been updated", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditProfileActivity.this, "Error " + e, Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void openFileChooser() {
@@ -150,11 +104,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data !=  null && data.getData() != null) {
             mImageUri = data.getData();
 
-            Picasso.get().load(mImageUri).into(imgEditAvatar);
-            if (uploadAvatarTask != null && uploadAvatarTask.isInProgress()) {
-                Toast.makeText(this, "Upload in progress", Toast.LENGTH_SHORT).show();
-            } else
-                uploadFile();
+            Picasso.get().load(mImageUri).into(imgContainer);
         }
     }
 
@@ -166,10 +116,34 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void uploadFile() {
+
+        String name, address, desc;
+        name = postName.getText().toString().trim();
+        address = postAddress.getText().toString().trim();
+        desc = postDesc.getText().toString().trim();
+
+        if (name.isEmpty()) {
+            postName.setError("Place name is required");
+            postName.requestFocus();
+            return;
+        }
+
+        if (address.isEmpty()) {
+            postAddress.setError("Address is required");
+            postAddress.requestFocus();
+            return;
+        }
+
+        if (desc.isEmpty()) {
+            postDesc.setError("Description is required");
+            postDesc.requestFocus();
+            return;
+        }
+
         if (mImageUri != null) {
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
 
-            uploadAvatarTask = fileReference.putFile(mImageUri)
+            uploadPostTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -186,36 +160,39 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                         }
                                     }, 500);
 
-                                    Toast.makeText(EditProfileActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddPostActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
 
-                                    Map<String, Object> childUpdates = new HashMap<>();
-                                    childUpdates.put("avatar", uri.toString());
-                                    FirebaseDatabase.getInstance().getReference("Users")
-                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                            .updateChildren(childUpdates)
+                                    Map<String, Object> childUpload = new HashMap<>();
+                                    childUpload.put("uid", user.getUid());
+                                    childUpload.put("name", name);
+                                    childUpload.put("address", address);
+                                    childUpload.put("desc", desc);
+                                    childUpload.put("imgUrl", uri.toString());
+                                    childUpload.put("vote", 0);
+
+                                    String postId = mDatabaseRef.push().getKey();
+                                    mDatabaseRef.child(postId).setValue(childUpload)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    Log.d("edit user", "onSuccess: edit success, file name" + uri.toString());
+                                                    finish();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     Log.d("edit user", "onFailure: " + e);
+                                                    Toast.makeText(AddPostActivity.this, "Error " + e, Toast.LENGTH_LONG).show();
                                                 }
                                             });
                                 }
                             });
-
-
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(EditProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddPostActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     })

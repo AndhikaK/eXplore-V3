@@ -41,13 +41,7 @@
 
     </RelativeLayout>
 
-        <ProgressBar
-            android:id="@+id/progress_bar_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            />
+
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -69,8 +63,7 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:textSize="@dimen/input_txt_size"
-        android:layout_centerHorizontal="true"
-        android:text="deathscarlet21@gmail.com"/>
+        android:layout_centerHorizontal="true"/>
 
         <ImageView
             android:id="@+id/username_icon"
@@ -101,8 +94,7 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:textSize="12sp"
-        android:inputType="textPassword"
-        android:text="123456"/>
+        android:inputType="textPassword"/>
 
         <ImageView
             android:id="@+id/icon"
@@ -139,4 +131,13 @@
 
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

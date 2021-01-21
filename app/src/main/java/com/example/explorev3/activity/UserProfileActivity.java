@@ -61,6 +61,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     private void userLogout() {
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(UserProfileActivity.this, MainActivity.class));
+        startActivity(new Intent(UserProfileActivity.this, MainSwipeActivity.class));
     }
 }

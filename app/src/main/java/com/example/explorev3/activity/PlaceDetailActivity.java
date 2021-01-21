@@ -94,6 +94,28 @@ public class PlaceDetailActivity extends AppCompatActivity implements View.OnCli
         parseJSON(xid);
     }
 
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.btn_navigate_map:
+                Uri gmmURI = Uri.parse("geo:" + mPlaceLat + "," + mPlaceLon + "?z=18&q=" + mPlaceName);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmURI);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Can't run maps", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                break;
+
+            case R.id.favorites_btn:
+                addFavorite();
+                break;
+        }
+    }
+
     private void addRatingIcon() {
         int rating = Integer.parseInt(mPlaceRating);
         mStar = new TextView[rating];
@@ -153,28 +175,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements View.OnCli
         requestQueue.add(objectRequest);
     }
 
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.btn_navigate_map:
-                Uri gmmURI = Uri.parse("geo:" + mPlaceLat + "," + mPlaceLon + "?z=18&q=" + mPlaceName);
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmURI);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(mapIntent);
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Can't run maps", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                break;
-
-            case R.id.favorites_btn:
-                addFavorite();
-                break;
-        }
-    }
-
     private void addFavorite() {
         ContentValues cv = new ContentValues();
         cv.put(FavoriteContract.FavoriteEntry.COLLUMN_XID, mPlaceXID);
@@ -184,5 +184,7 @@ public class PlaceDetailActivity extends AppCompatActivity implements View.OnCli
         cv.put(FavoriteContract.FavoriteEntry.COLLUMN_RATING, mPlaceRating);
 
         mDatabase.insert(FavoriteContract.FavoriteEntry.TABLE_NAME, null, cv);
+
+        Toast.makeText(this, mPlaceName + " added to favorites", Toast.LENGTH_SHORT).show();
     }
 }
